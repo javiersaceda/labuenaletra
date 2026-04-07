@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Presentación de Libros · La buena Letra  ·  2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #F7F3EC;
+      --ink: #1A1612;
+      --sepia: #8B6F4E;
+      --gold: #C4973A;
+      --muted: #6B5D52;
+      --line: rgba(139,111,78,0.25);
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'Lato', sans-serif;
+    }
+
+    #app {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── PANTALLAS ── */
+    .screen { display: none; animation: fadeIn 0.55s ease; }
+    .screen.active { display: flex; flex-direction: column; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── BIENVENIDA ── */
+    #screen-welcome {
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+
+    .welcome-ornament {
+      font-size: 2.2rem;
+      color: var(--gold);
+      letter-spacing: 0.35em;
+      margin-bottom: 1.8rem;
+    }
+    .welcome-group {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(0.85rem, 2vw, 1.1rem);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--sepia);
+      margin-bottom: 1rem;
+    }
+    .welcome-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.4rem, 7vw, 4.2rem);
+      font-weight: 600;
+      line-height: 1.12;
+      margin-bottom: 0.8rem;
+    }
+    .welcome-year {
+      font-size: 0.9rem;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+    }
+    .welcome-divider {
+      width: 70px; height: 1px;
+      background: var(--gold);
+      margin: 0 auto 2rem;
+    }
+    .welcome-authors {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: var(--sepia);
+      font-size: 1rem;
+      line-height: 2;
+      margin-bottom: 3.5rem;
+    }
+    .btn-start {
+      background: var(--ink);
+      color: var(--cream);
+      border: none;
+      padding: 1rem 3rem;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.82rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-start:hover { background: var(--sepia); transform: translateY(-2px); }
+
+    /* ── LIBRO ── */
+    #screen-book { min-height: 100vh; }
+
+    .book-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.1rem 2rem;
+      border-bottom: 1px solid var(--line);
+      flex-shrink: 0;
+    }
+    .book-counter {
+      font-size: 0.76rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .book-group-tag {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 0.92rem;
+      color: var(--gold);
+    }
+
+    /* Botón pantalla completa */
+    .btn-fullscreen {
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      width: 34px; height: 34px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      transition: border-color 0.2s, color 0.2s;
+      flex-shrink: 0;
+    }
+    .btn-fullscreen:hover { border-color: var(--sepia); color: var(--ink); }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .progress-bar { height: 2px; background: var(--line); flex-shrink: 0; }
+    .progress-fill { height: 100%; background: var(--gold); transition: width 0.5s ease; }
+
+    .book-content {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1.65fr;
+    }
+
+    .book-cover-col {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+      border-right: 1px solid var(--line);
+      background: rgba(139,111,78,0.04);
+    }
+    .book-cover {
+      width: 100%;
+      max-width: 230px;
+      aspect-ratio: 2/3;
+      border-radius: 2px 7px 7px 2px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 1.8rem 1.2rem;
+      position: relative;
+      box-shadow: -5px 5px 0 rgba(0,0,0,0.18), 2px 2px 16px rgba(0,0,0,0.14);
+      overflow: hidden;
+      transition: background 0.5s;
+    }
+    .book-cover img.cover-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      border-radius: inherit;
+      z-index: 0;
+    }
+    .cover-ornament { font-size: 2rem; margin-bottom: 1rem; position: relative; z-index: 1; }
+    .cover-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      line-height: 1.3;
+      margin-bottom: 0.8rem;
+      position: relative; z-index: 1;
+    }
+    .cover-author {
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.85;
+      position: relative; z-index: 1;
+    }
+    .book-cover.has-image .cover-ornament,
+    .book-cover.has-image .cover-title,
+    .book-cover.has-image .cover-author { display: none; }
+
+    .book-info-col {
+      padding: 3.5rem 3.5rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1.4rem;
+    }
+    .book-genre {
+      font-size: 0.74rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 700;
+    }
+    .book-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.9rem, 4vw, 3rem);
+      font-weight: 600;
+      line-height: 1.12;
+    }
+    .book-author-line {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.1rem;
+      color: var(--sepia);
+    }
+    .book-divider { width: 50px; height: 1px; background: var(--gold); }
+    .book-synopsis {
+      font-size: 1rem;
+      line-height: 1.85;
+      color: var(--muted);
+      font-weight: 300;
+      max-width: 500px;
+    }
+
+    .book-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.4rem 2rem;
+      border-top: 1px solid var(--line);
+      flex-shrink: 0;
+    }
+    .nav-btn {
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--ink);
+      padding: 0.65rem 1.5rem;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.79rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover { border-color: var(--sepia); background: rgba(139,111,78,0.06); }
+    .nav-btn:disabled { opacity: 0.28; cursor: default; pointer-events: none; }
+    .nav-btn.primary { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+    .nav-btn.primary:hover { background: var(--sepia); border-color: var(--sepia); }
+
+    .dots { display: flex; gap: 9px; align-items: center; }
+    .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: transparent;
+      border: 1px solid var(--sepia);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .dot.active { background: var(--sepia); }
+
+    /* ── CIERRE ── */
+    #screen-end {
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+    .end-ornament { font-size: 2.2rem; color: var(--gold); margin-bottom: 1.5rem; }
+    .end-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5.5vw, 3.2rem);
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    .end-sub {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: var(--muted);
+      font-size: 1.1rem;
+      margin-bottom: 2.5rem;
+    }
+    .end-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem; }
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--sepia);
+      color: var(--sepia);
+      padding: 0.75rem 2rem;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover { background: var(--sepia); color: var(--cream); }
+
+    /* ── MODO PRESENTACIÓN (pantalla completa) ── */
+    :fullscreen #app,
+    :-webkit-full-screen #app,
+    :-moz-full-screen #app {
+      background: var(--cream);
+    }
+    :fullscreen .book-title,
+    :-webkit-full-screen .book-title,
+    :-moz-full-screen .book-title {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+    }
+    :fullscreen .book-synopsis,
+    :-webkit-full-screen .book-synopsis,
+    :-moz-full-screen .book-synopsis {
+      font-size: 1.12rem;
+    }
+    :fullscreen .book-cover,
+    :-webkit-full-screen .book-cover,
+    :-moz-full-screen .book-cover {
+      max-width: 280px;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 680px) {
+      .book-content { grid-template-columns: 1fr; }
+      .book-cover-col { border-right: none; border-bottom: 1px solid var(--line); padding: 2rem 1.5rem; }
+      .book-info-col { padding: 2rem 1.5rem; }
+      .book-header { flex-wrap: wrap; gap: 8px; }
+    }
+
+    /* ── TECLAS ── */
+    .keyboard-hint {
+      font-size: 0.7rem;
+      color: var(--line);
+      letter-spacing: 0.1em;
+      text-align: center;
+      padding-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ══ BIENVENIDA ══ -->
+  <section id="screen-welcome" class="screen active">
+    <div class="welcome-ornament">❧ ❧ ❧</div>
+    <p class="welcome-group">Asociación de Escritores de Fuenlabrada "La Buena Letra"</p>
+    <h1 class="welcome-title">Presentación<br>de Libros</h1>
+    <p class="welcome-year">1ª · Edición Virtual · 2026</p>
+    <div class="welcome-divider"></div>
+    <p class="welcome-authors">
+      Emiliano Martínez de Dios
+    </p>
+    <button class="btn-start" onclick="goToBook(0)">Comenzar presentación</button>
+  </section>
+
+  <!-- ══ LIBRO ══ -->
+  <section id="screen-book" class="screen">
+    <div class="book-header">
+      <span class="book-counter" id="book-counter">Libro 1 de 1</span>
+      <div class="header-right">
+        <span class="book-group-tag">La Buena Letra · 2026</span>
+        <button class="btn-fullscreen" id="btn-fs" onclick="toggleFullscreen()" title="Pantalla completa (F)">⛶</button>
+      </div>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill" style="width:20%"></div>
+    </div>
+    <div class="book-content">
+      <div class="book-cover-col">
+        <div class="book-cover" id="book-cover-box">
+          <div class="cover-ornament" id="cover-ornament">◆</div>
+          <div class="cover-title" id="cover-title">Título</div>
+          <div class="cover-author" id="cover-author">Autor</div>
+        </div>
+      </div>
+      <div class="book-info-col">
+        <p class="book-genre" id="book-genre">Género</p>
+        <h2 class="book-title" id="book-title">Título del libro</h2>
+        <p class="book-author-line" id="book-author-line">por Autor</p>
+        <div class="book-divider"></div>
+        <p class="book-synopsis" id="book-synopsis">Sinopsis.</p>
+      </div>
+    </div>
+    <div class="book-nav">
+      <button class="nav-btn" id="btn-prev" onclick="navigate(-1)">← Anterior</button>
+      <div class="dots" id="dots-container"></div>
+      <button class="nav-btn primary" id="btn-next" onclick="navigate(1)">Siguiente →</button>
+    </div>
+    <p class="keyboard-hint">← → teclas de flecha &nbsp;·&nbsp; F pantalla completa &nbsp;·&nbsp; Esc salir</p>
+  </section>
+
+  <!-- ══ CIERRE ══ -->
+  <section id="screen-end" class="screen">
+    <div class="end-ornament">✦</div>
+    <h2 class="end-title">Gracias por acompañarnos</h2>
+    <p class="end-sub">Hasta la próxima edición</p>
+    <div class="welcome-divider"></div>
+    <p style="color:var(--muted);font-size:0.9rem;margin-top:1rem;font-family:'Playfair Display',serif;font-style:italic;">
+      Asociacion de Escritores de Fuenlabrada "La Buena Letra"  ·  2026
+    </p>
+    <div class="end-actions">
+      <button class="btn-secondary" onclick="goToBook(0)">Ver de nuevo</button>
+     <a class="btn-secondary" href="index.html">Volver al inicio</a>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  /* ════════════════════════════════════════
+     DATOS — edita aquí tus libros reales
+  ════════════════════════════════════════ */
+  /*
+    ── CÓMO AÑADIR IMÁGENES DE PORTADA ──────────────────────────────
+    1. Pon los archivos de imagen en la MISMA carpeta que este HTML.
+       Formatos válidos: .jpg  .jpeg  .png  .webp
+    2. En cada libro añade:   coverImage: "nombre-del-archivo.jpg"
+    3. Si un libro no tiene imagen, simplemente no pongas coverImage
+       (o déjalo como coverImage: "") y se mostrará el color de fondo.
+    ─────────────────────────────────────────────────────────────────
+  */
+  const books = [
+    {
+      title: "No quiero deambular",
+      author: "Emiliano Martínez de Dios",
+      genre: "Ciencia Ficción apocalíptica",
+      synopsis: "En un mundo devastado por una pandemia zombi, la joven Blanka llega a un complejo policial convertido en refugio. Allí, entre cuarentenas, protocolos estrictos y silencios cargados de dolor y sospecha, descubre que el verdadero enemigo no siempre está fuera de los muros. Junto a Emilio, un expolicía marcado por la tragedia, y un grupo de supervivientes tan rotos como decididos, deberá enfrentarse a los horrores del exterior… y a los dilemas morales del interior. ¿Qué significa ser humano cuando el mundo ha dejado de serlo? No quiero deambular es una historia de duelo, resistencia y redención. Una novela que, más allá del apocalipsis, explora la fragilidad de nuestras estructuras sociales y la fuerza de los vínculos que nos salvan.",
+      coverColor: "#3C3489",
+      coverText: "#CECBF6",
+      coverImage: "emiliano/Portada_NQD_UdL.jpg",
+      ornament: "◆"
+    }
+  ];
+  /* ════════════════════════════════════════ */
+
+  let current = 0;
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function goToBook(index) {
+    current = index;
+    showScreen('screen-book');
+    renderBook();
+  }
+
+  function renderBook() {
+    const b = books[current];
+    const total = books.length;
+
+    document.getElementById('book-counter').textContent = 'Libro ' + (current + 1) + ' de ' + total;
+    document.getElementById('progress-fill').style.width = ((current + 1) / total * 100) + '%';
+    document.getElementById('book-genre').textContent = b.genre;
+    document.getElementById('book-title').textContent = b.title;
+    document.getElementById('book-author-line').textContent = 'por ' + b.author;
+    document.getElementById('book-synopsis').textContent = b.synopsis;
+
+    const box = document.getElementById('book-cover-box');
+    box.style.background = b.coverColor;
+    box.style.color = b.coverText;
+    document.getElementById('cover-title').textContent = b.title;
+    document.getElementById('cover-author').textContent = b.author.toUpperCase();
+    document.getElementById('cover-ornament').textContent = b.ornament;
+
+    // Imagen de portada local
+    const existingImg = box.querySelector('img.cover-img');
+    if (existingImg) existingImg.remove();
+    if (b.coverImage) {
+      const img = document.createElement('img');
+      img.className = 'cover-img';
+      img.src = b.coverImage;
+      img.alt = b.title;
+      box.classList.add('has-image');
+      box.prepend(img);
+    } else {
+      box.classList.remove('has-image');
+    }
+
+    document.getElementById('btn-prev').disabled = current === 0;
+    document.getElementById('btn-next').textContent =
+      current === total - 1 ? 'Fin de la presentación' : 'Siguiente →';
+
+    const dotsEl = document.getElementById('dots-container');
+    dotsEl.innerHTML = '';
+    for (let i = 0; i < total; i++) {
+      const d = document.createElement('div');
+      d.className = 'dot' + (i === current ? ' active' : '');
+      d.onclick = () => goToBook(i);
+      dotsEl.appendChild(d);
+    }
+  }
+
+  function navigate(dir) {
+    const next = current + dir;
+    if (next < 0) return;
+    if (next >= books.length) { showScreen('screen-end'); return; }
+    goToBook(next);
+  }
+
+  /* ── Pantalla completa ── */
+  function toggleFullscreen() {
+    const el = document.documentElement;
+    const isFs = document.fullscreenElement || document.webkitFullscreenElement;
+    if (!isFs) {
+      (el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen).call(el);
+    } else {
+      (document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen).call(document);
+    }
+  }
+
+  /* ── Teclado ── */
+  document.addEventListener('keydown', e => {
+    if (document.getElementById('screen-book').classList.contains('active')) {
+      if (e.key === 'ArrowRight') navigate(1);
+      if (e.key === 'ArrowLeft')  navigate(-1);
+    }
+    if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+  });
+</script>
+</body>
+</html>
