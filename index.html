@@ -133,7 +133,7 @@ var groupMembers = [
   { name: "Emiliano Martínez", photo: "emiliano/581D18A8-6490-41B3-BBD3-2F8166254295.jpg" },
   { name: "Teresa Fernández",  photo: "Teresa/1409F5AA-0BC0-42A1-9BBE-BA92A621B20C.jpg" },
   { name: "Domingo de Ramos",  photo: "domingo/948FA655-EABC-40DB-8A9B-1736F2ED3013.jpg" },
-  { name: "Marisa Martin",     photo: "marisa/Marisa.jpeg" }
+  { name: "Marisa Martin",     photo: "marisa/Marisa_Martin_de_Ruedas_1.jpg" }
 ];
 
 function openPopup(key) {
@@ -202,7 +202,7 @@ function handleOverlayClick(e) {
 document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closePopup(); });
 
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() { navigator.serviceWorker.register('/sw.js'); });
+  window.addEventListener('load', function() { navigator.serviceWorker.register('./sw.js'); });
 }
 </script>
 </body>
