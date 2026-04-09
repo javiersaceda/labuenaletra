@@ -571,7 +571,10 @@
  }
 
  /* ── Teclado ── */
- document.addEventListener('keydown', e => {
+ if (window.location.hash === '#start') {
+    goToBook(0);
+  }
+  document.addEventListener('keydown', e => {
  if (document.getElementById('screen-book').classList.contains('active')) {
  if (e.key === 'ArrowRight') navigate(1);
  if (e.key === 'ArrowLeft') navigate(-1);
