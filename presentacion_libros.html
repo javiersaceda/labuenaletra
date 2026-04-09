@@ -591,6 +591,11 @@
   }
 
   /* ── Teclado ── */
+  
+  if (window.location.hash === '#start') {
+    goToBook(0);
+  }
+
   document.addEventListener('keydown', e => {
     if (document.getElementById('screen-book').classList.contains('active')) {
       if (e.key === 'ArrowRight') navigate(1);
