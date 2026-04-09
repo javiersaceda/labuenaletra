@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Presentación de Libros · Escritores Noveles 2025</title>
+  <title>Presentación de Libros · La buena Letra  ·  2026</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -360,12 +360,25 @@
 <body>
 <div id="app">
 
+  <!-- ══ BIENVENIDA ══ -->
+  <section id="screen-welcome" class="screen active">
+    <div class="welcome-ornament">❧ ❧ ❧</div>
+    <p class="welcome-group">Asociación de Escritores de Fuenlabrada "La Buena Letra"</p>
+    <h1 class="welcome-title">Presentación<br>de Libros</h1>
+    <p class="welcome-year">1ª · Edición Virtual · 2026</p>
+    <div class="welcome-divider"></div>
+    <p class="welcome-authors">
+      Javier Saceda
+    </p>
+    <button class="btn-start" onclick="goToBook(0)">Comenzar presentación</button>
+  </section>
+
   <!-- ══ LIBRO ══ -->
-  <section id="screen-book" class="screen active">
+  <section id="screen-book" class="screen">
     <div class="book-header">
-      <span class="book-counter" id="book-counter">Libro 1 de 5</span>
+      <span class="book-counter" id="book-counter">Libro 1 de 8</span>
       <div class="header-right">
-        <span class="book-group-tag">Escritores Noveles · 2025</span>
+        <span class="book-group-tag">La Buena Letra · 2026</span>
         <button class="btn-fullscreen" id="btn-fs" onclick="toggleFullscreen()" title="Pantalla completa (F)">⛶</button>
       </div>
     </div>
@@ -400,14 +413,14 @@
   <section id="screen-end" class="screen">
     <div class="end-ornament">✦</div>
     <h2 class="end-title">Gracias por acompañarnos</h2>
-    <p class="end-sub">Hasta la próxima presentación</p>
+    <p class="end-sub">Hasta la próxima edición</p>
     <div class="welcome-divider"></div>
     <p style="color:var(--muted);font-size:0.9rem;margin-top:1rem;font-family:'Playfair Display',serif;font-style:italic;">
-      Grupo de Escritores Noveles · 2025
+      Asociacion de Escritores de Fuenlabrada "La Buena Letra"  ·  2026
     </p>
     <div class="end-actions">
       <button class="btn-secondary" onclick="goToBook(0)">Ver de nuevo</button>
-      <a class="btn-secondary" href="index.html">Volver al inicio</a>
+     <a class="btn-secondary" href="index.html">Volver al inicio</a>
     </div>
   </section>
 
@@ -434,7 +447,7 @@
       synopsis: "Todo aquello de lo que somos capaces de hacer para poder llegar a fin de mes",
       coverColor: "#3C3489",
       coverText: "#CECBF6",
-      coverImage: "1000145306.jpg",
+      coverImage: "javier/IMG_20260401_132346.jpg",
       ornament: "◆"
     },
     {
@@ -444,7 +457,7 @@
       synopsis: "Poemas de amor y desamor",
       coverColor: "#854F0B",
       coverText: "#FAC775",
-      coverImage: "1000145307.jpg",
+      coverImage: "javier/IMG_20260401_132506.jpg",
       ornament: "◇"
     },
     {
@@ -454,7 +467,7 @@
       synopsis: "Historia e historias de un taxista y sus clientes",
       coverColor: "#993C1D",
       coverText: "#F5C4B3",
-      coverImage: "1000145308.jpg",
+      coverImage: "javier/IMG_20260401_132544.jpg",
       ornament: "●"
     },
     {
@@ -464,7 +477,7 @@
       synopsis: "Segundo volumen de las historias de un taxista",
       coverColor: "#0C447C",
       coverText: "#B5D4F4",
-      coverImage: "1000145309.jpg",
+      coverImage: "javier/IMG_20260401_132600.jpg",
       ornament: "◉"
     },
     {
@@ -474,7 +487,7 @@
       synopsis: "Volumen final de esta trilogía de los taxistas y sus historias",
       coverColor: "#3B6D11",
       coverText: "#C0DD97",
-      coverImage: "1000145310.jpg",
+      coverImage: "javier/IMG_20260401_132640.jpg",
       ornament: "✦"
     },
     {
@@ -484,7 +497,7 @@
       synopsis: "Cuando la verdad la saben otros...",
       coverColor: "#72243E",
       coverText: "#F4C0D1",
-      coverImage: "1000145311.jpg",
+      coverImage: "javier/IMG_20260401_132731.jpg",
       ornament: "◆"
     },
     {
@@ -494,8 +507,18 @@
       synopsis: "Una novela con tensión",
       coverColor: "#185FA5",
       coverText: "#B5D4F4",
-      coverImage: "1000145312.jpg",
+      coverImage: "javier/IMG_20260401_132856.jpg",
       ornament: "◉"
+    },
+	{
+      title: "After desire",
+      author: "Javier Saceda",
+      genre: "Novela · Thriller psicológico version en Inglés",
+      synopsis: "When others know the truth...",
+      coverColor: "#72243E",
+      coverText: "#F4C0D1",
+      coverImage: "javier/IMG_20260401_132840.jpg",
+      ornament: "◆"
     }
   ];
   /* ════════════════════════════════════════ */
@@ -578,9 +601,10 @@
   }
 
   /* ── Teclado ── */
-  
-  goToBook(0);
 
+  if (window.location.hash === '#start') {
+    goToBook(0);
+  }
   document.addEventListener('keydown', e => {
     if (document.getElementById('screen-book').classList.contains('active')) {
       if (e.key === 'ArrowRight') navigate(1);
